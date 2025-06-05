@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\JobRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: JobRepository::class)]
@@ -18,7 +19,7 @@ class Job
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -28,32 +29,33 @@ class Job
     private ?string $city = null;
 
     #[ORM\Column]
-    private ?bool $remoteAllowed = null;
+    private ?bool $remoteAllowed = false;
 
-    #[ORM\Column(type: 'float')]
-    private ?float $salaryMin = null;
-
-    #[ORM\Column(type: 'float')]
-    private ?float $salaryMax = null;
+    #[ORM\Column(length: 255)]
+    private ?string $salaryRange = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobs')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
 
+    #[ORM\ManyToMany(targetEntity: JobCategory::class, inversedBy: 'jobs')]
+    private Collection $categories;
+
     #[ORM\ManyToOne(inversedBy: 'jobs')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?JobType $jobType = null;
-
-    #[ORM\ManyToMany(targetEntity: JobCategory::class, inversedBy: 'jobs')]
-    private Collection $jobCategories;
+    private ?JobType $type = null;
 
     #[ORM\OneToMany(mappedBy: 'job', targetEntity: JobApplication::class)]
-    private Collection $jobApplications;
+    private Collection $applications;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function __construct()
     {
-        $this->jobCategories = new ArrayCollection();
-        $this->jobApplications = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -116,25 +118,14 @@ class Job
         return $this;
     }
 
-    public function getSalaryMin(): ?float
+    public function getSalaryRange(): ?string
     {
-        return $this->salaryMin;
+        return $this->salaryRange;
     }
 
-    public function setSalaryMin(float $salaryMin): static
+    public function setSalaryRange(string $salaryRange): static
     {
-        $this->salaryMin = $salaryMin;
-        return $this;
-    }
-
-    public function getSalaryMax(): ?float
-    {
-        return $this->salaryMax;
-    }
-
-    public function setSalaryMax(float $salaryMax): static
-    {
-        $this->salaryMax = $salaryMax;
+        $this->salaryRange = $salaryRange;
         return $this;
     }
 
@@ -149,63 +140,74 @@ class Job
         return $this;
     }
 
-    public function getJobType(): ?JobType
-    {
-        return $this->jobType;
-    }
-
-    public function setJobType(?JobType $jobType): static
-    {
-        $this->jobType = $jobType;
-        return $this;
-    }
-
     /**
      * @return Collection<int, JobCategory>
      */
-    public function getJobCategories(): Collection
+    public function getCategories(): Collection
     {
-        return $this->jobCategories;
+        return $this->categories;
     }
 
-    public function addJobCategory(JobCategory $jobCategory): static
+    public function addCategory(JobCategory $category): static
     {
-        if (!$this->jobCategories->contains($jobCategory)) {
-            $this->jobCategories->add($jobCategory);
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
         }
         return $this;
     }
 
-    public function removeJobCategory(JobCategory $jobCategory): static
+    public function removeCategory(JobCategory $category): static
     {
-        $this->jobCategories->removeElement($jobCategory);
+        $this->categories->removeElement($category);
+        return $this;
+    }
+
+    public function getType(): ?JobType
+    {
+        return $this->type;
+    }
+
+    public function setType(?JobType $type): static
+    {
+        $this->type = $type;
         return $this;
     }
 
     /**
      * @return Collection<int, JobApplication>
      */
-    public function getJobApplications(): Collection
+    public function getApplications(): Collection
     {
-        return $this->jobApplications;
+        return $this->applications;
     }
 
-    public function addJobApplication(JobApplication $jobApplication): static
+    public function addApplication(JobApplication $application): static
     {
-        if (!$this->jobApplications->contains($jobApplication)) {
-            $this->jobApplications->add($jobApplication);
-            $jobApplication->setJob($this);
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setJob($this);
         }
         return $this;
     }
 
-    public function removeJobApplication(JobApplication $jobApplication): static
+    public function removeApplication(JobApplication $application): static
     {
-        if ($this->jobApplications->removeElement($jobApplication)) {
-            if ($jobApplication->getJob() === $this) {
-                $jobApplication->setJob(null);
+        if ($this->applications->removeElement($application)) {
+            if ($application->getJob() === $this) {
+                $application->setJob(null);
             }
         }
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
         return $this;
     }
 }

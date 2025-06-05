@@ -1,0 +1,83 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Dashboard{% endblock %}
+
+{% block main %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Jobs Overview</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Total Jobs</span>
+                    <span class="text-2xl font-bold text-primary">{{ jobs_count|default(0) }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Active Jobs</span>
+                    <span class="text-2xl font-bold text-green-600">{{ active_jobs_count|default(0) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Applications</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Total Applications</span>
+                    <span class="text-2xl font-bold text-primary">{{ applications_count|default(0) }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">New Applications</span>
+                    <span class="text-2xl font-bold text-blue-600">{{ new_applications_count|default(0) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Companies</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Total Companies</span>
+                    <span class="text-2xl font-bold text-primary">{{ companies_count|default(0) }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">Active Companies</span>
+                    <span class="text-2xl font-bold text-green-600">{{ active_companies_count|default(0) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 bg-white rounded-lg shadow">
+        <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Applications</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applicant</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for application in recent_applications|default([]) %}
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ application.user.firstName }} {{ application.user.lastName }}</div>
+                                    <div class="text-sm text-gray-500">{{ application.user.email }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">{{ application.job.title }}</div>
+                                    <div class="text-sm text-gray-500">{{ application.job.company.name }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ application.createdAt|date('Y-m-d H:i') }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

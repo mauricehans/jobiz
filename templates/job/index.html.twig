@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Job Listings{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">Find Your Dream Job</h1>
+                <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500">Browse through our latest job opportunities in the tech industry.</p>
+            </div>
+
+            <div class="mt-12">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                    <div class="px-4 py-5 sm:px-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <h2 class="text-lg leading-6 font-medium text-gray-900">Filter Jobs</h2>
+                            <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                                <select name="category" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                    <option value="">All Categories</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if current_category == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+
+                                <select name="country" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md">
+                                    <option value="">All Countries</option>
+                                    {% for country in countries %}
+                                        <option value="{{ country }}" {% if current_country == country %}selected{% endif %}>
+                                            {{ country }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="mb-4">
+                            <a href="{{ path('app_job_new') }}" class="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700">Ajouter une offre</a>
+                        </div>
+                    {% endif %}
+
+                    <ul role="list" class="divide-y divide-gray-200">
+                        {% for job in jobs %}
+                            <li class="mb-6 p-4 bg-gray-800 rounded shadow">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <a href="{{ path('app_job_show', {'id': job.id}) }}" class="text-lg font-semibold text-teal-400 hover:underline">{{ job.title }}</a>
+                                        <span class="ml-2 text-sm text-gray-400">{{ job.type.name }}</span>
+                                    </div>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <div class="flex gap-2">
+                                            <a href="{{ path('app_job_edit', {'id': job.id}) }}" class="text-blue-400 hover:underline">Modifier</a>
+                                            <form method="post" action="{{ path('app_job_delete', {'id': job.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette offre ?');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ job.id) }}">
+                                                <button type="submit" class="text-red-400 hover:underline">Supprimer</button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mt-2 sm:flex sm:justify-between">
+                                    <div class="sm:flex">
+                                        <p class="flex items-center text-sm text-gray-500">
+                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                            </svg>
+                                            {{ job.city }}, {{ job.country }}
+                                        </p>
+                                        {% if job.remoteAllowed %}
+                                            <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clip-rule="evenodd" />
+                                                </svg>
+                                                Remote
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                                        </svg>
+                                        <p>
+                                            Posted {{ job.createdAt|date('M d, Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %} 

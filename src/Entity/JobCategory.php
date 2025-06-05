@@ -18,8 +18,16 @@ class JobCategory
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Job::class, mappedBy: 'jobCategories')]
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Job::class, mappedBy: 'categories')]
     private Collection $jobs;
+
+    public function __construct()
+    {
+        $this->jobs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -37,6 +45,17 @@ class JobCategory
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Job>
      */
@@ -49,7 +68,7 @@ class JobCategory
     {
         if (!$this->jobs->contains($job)) {
             $this->jobs->add($job);
-            $job->addJobCategory($this);
+            $job->addCategory($this);
         }
         return $this;
     }
@@ -57,7 +76,7 @@ class JobCategory
     public function removeJob(Job $job): static
     {
         if ($this->jobs->removeElement($job)) {
-            $job->removeJobCategory($this);
+            $job->removeCategory($this);
         }
         return $this;
     }

@@ -33,85 +33,95 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Job::class)]
     private Collection $jobs;
 
+    public function __construct()
+    {
+        $this->jobs = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getName(): ?string
-{
-    return $this->name;
-}
-
-public function setName(string $name): static
-{
-    $this->name = $name;
-    return $this;
-}
-
-public function getDescription(): ?string
-{
-    return $this->description;
-}
-
-public function setDescription(string $description): static
-{
-    $this->description = $description;
-    return $this;
-}
-
-public function getAddress(): ?string
-{
-    return $this->address;
-}
-
-public function setAddress(string $address): static
-{
-    $this->address = $address;
-    return $this;
-}
-
-public function getCity(): ?string
-{
-    return $this->city;
-}
-
-public function setCity(string $city): static
-{
-    $this->city = $city;
-    return $this;
-}
-
-public function getCountry(): ?string
-{
-    return $this->country;
-}
-
-public function setCountry(string $country): static
-{
-    $this->country = $country;
-    return $this;
-}
-
-/**
- * @return Collection<int, Job>
- */
-public function getJobs(): Collection
-{
-    return $this->jobs;
-}
-
-public function addJob(Job $job): static
-{
-    if (!$this->jobs->contains($job)) {
-        $this->jobs->add($job);
-        $job->setCompany($this);
+    {
+        return $this->name;
     }
-    return $this;
-}
 
-public function removeJob(Job $job): static
-{
-    if ($this->jobs->removeElement($job)) {
-        if ($job->getCompany() === $this) {
-            $job->setCompany(null);
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): static
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): static
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Job>
+     */
+    public function getJobs(): Collection
+    {
+        return $this->jobs;
+    }
+
+    public function addJob(Job $job): static
+    {
+        if (!$this->jobs->contains($job)) {
+            $this->jobs->add($job);
+            $job->setCompany($this);
         }
+        return $this;
     }
-    return $this;
-}
+
+    public function removeJob(Job $job): static
+    {
+        if ($this->jobs->removeElement($job)) {
+            if ($job->getCompany() === $this) {
+                $job->setCompany(null);
+            }
+        }
+        return $this;
+    }
 }

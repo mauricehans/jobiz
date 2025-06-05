@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,7 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180)]
+    #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -29,17 +29,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    private ?string $lastName = null;
 
-    #[ORM\OneToMany(targetEntity: JobApplication::class, mappedBy: 'user')]
-    private Collection $jobApplications;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: JobApplication::class)]
+    private Collection $applications;
 
     public function __construct()
     {
-        $this->jobApplications = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?int
@@ -89,54 +90,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // Si vous stockez des données temporaires sensibles sur l'utilisateur, effacez-les ici
+        // If you store any temporary, sensitive data on the user, clear it here
     }
 
-    public function getNom(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->nom;
+        return $this->firstName;
     }
 
-    public function setNom(string $nom): static
+    public function setFirstName(string $firstName): static
     {
-        $this->nom = $nom;
+        $this->firstName = $firstName;
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getLastName(): ?string
     {
-        return $this->prenom;
+        return $this->lastName;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setLastName(string $lastName): static
     {
-        $this->prenom = $prenom;
+        $this->lastName = $lastName;
         return $this;
     }
 
     /**
      * @return Collection<int, JobApplication>
      */
-    public function getJobApplications(): Collection
+    public function getApplications(): Collection
     {
-        return $this->jobApplications;
+        return $this->applications;
     }
 
-    public function addJobApplication(JobApplication $jobApplication): static
+    public function addApplication(JobApplication $application): static
     {
-        if (!$this->jobApplications->contains($jobApplication)) {
-            $this->jobApplications->add($jobApplication);
-            $jobApplication->setUser($this);
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setUser($this);
         }
         return $this;
     }
 
-    public function removeJobApplication(JobApplication $jobApplication): static
+    public function removeApplication(JobApplication $application): static
     {
-        if ($this->jobApplications->removeElement($jobApplication)) {
-            // Définir le côté propriétaire à null (sauf s'il a déjà été modifié)
-            if ($jobApplication->getUser() === $this) {
-                $jobApplication->setUser(null);
+        if ($this->applications->removeElement($application)) {
+            if ($application->getUser() === $this) {
+                $application->setUser(null);
             }
         }
         return $this;

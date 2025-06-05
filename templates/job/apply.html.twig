@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Apply for {{ job.title }}{% endblock %}
+
+{% block body %}
+    <div class="bg-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-extrabold text-gray-900">Apply for {{ job.title }}</h1>
+                    <p class="mt-2 text-lg text-gray-500">at {{ job.company.name }}</p>
+                </div>
+
+                {{ form_start(form, {'attr': {'class': 'space-y-8'}}) }}
+                    <div>
+                        {{ form_label(form.coverLetter, 'Cover Letter', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        <div class="mt-1">
+                            {{ form_widget(form.coverLetter, {'attr': {'class': 'shadow-sm focus:ring-primary focus:border-primary block w-full sm:text-sm border-gray-300 rounded-md'}}) }}
+                        </div>
+                        {{ form_errors(form.coverLetter) }}
+                    </div>
+
+                    <div class="flex justify-end">
+                        <a href="{{ path('app_job_show', {id: job.id}) }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                            Submit Application
+                        </button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %} 

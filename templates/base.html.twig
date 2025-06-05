@@ -1,17 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" class="dark">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Welcome to Jobiz{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚕️</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#0d9488', // teal-600
+                            secondary: '#334155', // slate-700
+                        }
+                    }
+                }
+            }
+        </script>
+        {% block stylesheets %}{% endblock %}
+        {% block javascripts %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="min-h-screen bg-gray-900 text-gray-100">
+        <header class="bg-gray-800 shadow">
+            <div class="container mx-auto flex items-center py-4 px-6">
+                <img src="/logo-jobiz.png" alt="Jobiz Logo" class="h-10 w-auto mr-3"/>
+                <a href="/" class="text-2xl font-bold text-teal-400">Jobiz</a>
+                <nav class="ml-10 flex space-x-8">
+                    <a href="/" class="text-gray-100 hover:text-teal-400">Accueil</a>
+                    <a href="/about" class="text-gray-100 hover:text-teal-400">À propos</a>
+                    <a href="/jobs" class="text-gray-100 hover:text-teal-400">Offres</a>
+                </nav>
+                <form class="ml-auto flex items-center" action="#" method="get">
+                    <input type="text" name="q" placeholder="Recherche" class="rounded bg-gray-700 text-gray-100 border-none focus:ring-2 focus:ring-teal-500 px-4 py-2 mr-2" />
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded">OK</button>
+                </form>
+                {% if app.user %}
+                    <span class="ml-4 text-teal-400">{{ app.user.email }}</span>
+                    <a href="{{ path('app_logout') }}" class="ml-4 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">Déconnexion</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="ml-4 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">Connexion</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-white shadow-lg mt-8">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                <p class="text-center text-gray-500 text-sm">
+                    © {{ "now"|date("Y") }} Jobiz. All rights reserved.
+                </p>
+            </div>
+        </footer>
     </body>
 </html>
