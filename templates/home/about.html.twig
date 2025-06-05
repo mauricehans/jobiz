@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">About Jobiz</h1>
+    
+    <div class="prose prose-lg text-gray-600 mb-12">
+        <p class="mb-4">
+            Welcome to Jobiz, your trusted partner in career advancement. We're dedicated to connecting talented professionals with innovative companies that share their values and ambitions.
+        </p>
+        
+        <p class="mb-4">
+            Our platform serves as a bridge between job seekers and employers, facilitating meaningful connections that lead to fulfilling careers and successful business growth.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">Our Mission</h2>
+        <p class="mb-4">
+            At Jobiz, we believe that everyone deserves to find work that they love. Our mission is to make the job search process more efficient, transparent, and rewarding for both candidates and employers.
+        </p>
+
+        <h2 class="text-2xl font-bold text-gray-900 mt-8 mb-4">What Sets Us Apart</h2>
+        <ul class="list-disc pl-6 mb-4">
+            <li>Curated job listings from top companies</li>
+            <li>User-friendly application process</li>
+            <li>Focus on remote work opportunities</li>
+            <li>Comprehensive company profiles</li>
+            <li>Regular updates and new opportunities</li>
+        </ul>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <img src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg" alt="Team collaboration" class="rounded-lg shadow-md">
+        <img src="https://images.pexels.com/photos/3184466/pexels-photo-3184466.jpeg" alt="Office environment" class="rounded-lg shadow-md">
+    </div>
+</div>
+{% endblock %}
