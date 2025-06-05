@@ -60,4 +60,152 @@ class Job
     {
         return $this->id;
     }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): static
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): static
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function isRemoteAllowed(): ?bool
+    {
+        return $this->remoteAllowed;
+    }
+
+    public function setRemoteAllowed(bool $remoteAllowed): static
+    {
+        $this->remoteAllowed = $remoteAllowed;
+        return $this;
+    }
+
+    public function getSalaryMin(): ?float
+    {
+        return $this->salaryMin;
+    }
+
+    public function setSalaryMin(float $salaryMin): static
+    {
+        $this->salaryMin = $salaryMin;
+        return $this;
+    }
+
+    public function getSalaryMax(): ?float
+    {
+        return $this->salaryMax;
+    }
+
+    public function setSalaryMax(float $salaryMax): static
+    {
+        $this->salaryMax = $salaryMax;
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): static
+    {
+        $this->company = $company;
+        return $this;
+    }
+
+    public function getJobType(): ?JobType
+    {
+        return $this->jobType;
+    }
+
+    public function setJobType(?JobType $jobType): static
+    {
+        $this->jobType = $jobType;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobCategory>
+     */
+    public function getJobCategories(): Collection
+    {
+        return $this->jobCategories;
+    }
+
+    public function addJobCategory(JobCategory $jobCategory): static
+    {
+        if (!$this->jobCategories->contains($jobCategory)) {
+            $this->jobCategories->add($jobCategory);
+        }
+        return $this;
+    }
+
+    public function removeJobCategory(JobCategory $jobCategory): static
+    {
+        $this->jobCategories->removeElement($jobCategory);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobApplication>
+     */
+    public function getJobApplications(): Collection
+    {
+        return $this->jobApplications;
+    }
+
+    public function addJobApplication(JobApplication $jobApplication): static
+    {
+        if (!$this->jobApplications->contains($jobApplication)) {
+            $this->jobApplications->add($jobApplication);
+            $jobApplication->setJob($this);
+        }
+        return $this;
+    }
+
+    public function removeJobApplication(JobApplication $jobApplication): static
+    {
+        if ($this->jobApplications->removeElement($jobApplication)) {
+            if ($jobApplication->getJob() === $this) {
+                $jobApplication->setJob(null);
+            }
+        }
+        return $this;
+    }
 }

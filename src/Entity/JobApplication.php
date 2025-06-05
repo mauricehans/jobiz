@@ -31,4 +31,48 @@ class JobApplication
     {
         return $this->id;
     }
+
+    public function getCoverLetter(): ?string
+    {
+        return $this->coverLetter;
+    }
+
+    public function setCoverLetter(string $coverLetter): static
+    {
+        $this->coverLetter = $coverLetter;
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getJob(): ?Job
+    {
+        return $this->job;
+    }
+
+    public function setJob(?Job $job): static
+    {
+        $this->job = $job;
+        return $this;
+    }
 }
